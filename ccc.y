@@ -29,7 +29,7 @@ program:
         ;
 
 block:
-        VOID VARIABLE '(' ')' '{' statements '}'    {printf("%s is completed.",$2);}
+        VOID VARIABLE '(' ')' '{' statements '}'    {}
         ;
 
 statements:
@@ -38,9 +38,9 @@ statements:
         ;
 
 statement:
-        INT var_list                     {printf("in varlist");}
+        INT var_list                     {}
         | VARIABLE '=' expr
-        | PRINT '(' STRING pargs ')'     {if($4=1){printf("hi\n");}}
+        | PRINT '(' STRING pargs ')'     {}
         | VARIABLE '(' ')'
         | expr
         |
@@ -68,8 +68,8 @@ op:
         ;
 
 var_list:
-        VARIABLE ',' var_list           {$$=$3+1;printf("variable\n");}
-        | VARIABLE                      {printf("in varlist %s",$1);$$=1;}
+        VARIABLE ',' var_list           {$$=$3+1;}
+        | VARIABLE                      {$$=1;}
         ;
 
 %%

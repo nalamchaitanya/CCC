@@ -13,7 +13,7 @@ digit   [0-9]
 
 %%
 
-("int ")             {printf("%s",yytext);return INT;}
+("int ")             {return INT;}
 
 ("void")            {
                         return VOID;
@@ -26,27 +26,25 @@ digit   [0-9]
                         return NUMBER;
                     }
 
-("+"|"-"|"{"|"}"|"("|")"|";"|"="|",") {printf("%s ",yytext);return *yytext;}
+("+"|"-"|"{"|"}"|"("|")"|";"|"="|",") {return *yytext;}
 
 [\"]([^\"])*[\"]    {
                         char *temp = strdup(yytext);
                         temp++;
                         yylval.string = strndup(temp,strlen(temp)-1);
-                        printf("%s",yytext);
                         return STRING;
                     }
 
-[/][/]([^\n])*[\n]  {printf("%s",yytext);}
+[/][/]([^\n])*[\n]  {}
 
 [ \t\n\r]+          {;}
 
 ({letter}({letter}|{digit})*)   {
                                     yylval.string = strdup(yytext);
-                                    printf("%s",yytext);
                                     return VARIABLE;
                                 }
 
-.                {printf("well\n");yyerror();}
+.                {yyerror();}
 
 %%
 
