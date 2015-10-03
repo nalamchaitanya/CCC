@@ -18,7 +18,7 @@ y.tab.o: y.tab.c y.tab.h
 # 	gcc -c $(CFLAGS) $< -o $@
 
 y.tab.c: ccc.y
-	yacc -d ccc.y
+	yacc -t -v -d ccc.y
 
 lex.yy.c: ccc.l
 	lex ccc.l

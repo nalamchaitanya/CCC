@@ -1,0 +1,452 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: block program
+    2        | block
+
+    3 block: VOID VARIABLE '(' ')' '{' statements '}'
+
+    4 statements: statement ';' statements
+    5           | statement ';'
+
+    6 statement: INT var_list
+    7          | VARIABLE '=' expr
+    8          | PRINT '(' STRING pargs ')'
+    9          | VARIABLE '(' ')'
+   10          | expr
+   11          | %empty
+
+   12 pargs: ',' VARIABLE pargs
+   13      | ',' NUMBER pargs
+   14      | %empty
+
+   15 expr: literal op expr
+   16     | literal
+
+   17 literal: VARIABLE
+   18        | NUMBER
+
+   19 op: '+'
+   20   | '-'
+
+   21 var_list: VARIABLE ',' var_list
+   22         | VARIABLE
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 3 8 9
+')' (41) 3 8 9
+'+' (43) 19
+',' (44) 12 13 21
+'-' (45) 20
+';' (59) 4 5
+'=' (61) 7
+'{' (123) 3
+'}' (125) 3
+error (256)
+VARIABLE (258) 3 7 9 12 17 21 22
+STRING (259) 8
+NUMBER (260) 13 18
+INT (261) 6
+VOID (262) 3
+PRINT (263) 8
+
+
+Nonterminals, with rules where they appear
+
+$accept (18)
+    on left: 0
+program (19)
+    on left: 1 2, on right: 0 1
+block (20)
+    on left: 3, on right: 1 2
+statements (21)
+    on left: 4 5, on right: 3 4
+statement (22)
+    on left: 6 7 8 9 10 11, on right: 4 5
+pargs (23)
+    on left: 12 13 14, on right: 8 12 13
+expr (24)
+    on left: 15 16, on right: 7 10 15
+literal (25)
+    on left: 17 18, on right: 15 16
+op (26)
+    on left: 19 20, on right: 15
+var_list (27)
+    on left: 21 22, on right: 6 21
+
+
+State 0
+
+    0 $accept: . program $end
+
+    VOID  shift, and go to state 1
+
+    program  go to state 2
+    block    go to state 3
+
+
+State 1
+
+    3 block: VOID . VARIABLE '(' ')' '{' statements '}'
+
+    VARIABLE  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 program: block . program
+    2        | block .
+
+    VOID  shift, and go to state 1
+
+    $default  reduce using rule 2 (program)
+
+    program  go to state 6
+    block    go to state 3
+
+
+State 4
+
+    3 block: VOID VARIABLE . '(' ')' '{' statements '}'
+
+    '('  shift, and go to state 7
+
+
+State 5
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 6
+
+    1 program: block program .
+
+    $default  reduce using rule 1 (program)
+
+
+State 7
+
+    3 block: VOID VARIABLE '(' . ')' '{' statements '}'
+
+    ')'  shift, and go to state 8
+
+
+State 8
+
+    3 block: VOID VARIABLE '(' ')' . '{' statements '}'
+
+    '{'  shift, and go to state 9
+
+
+State 9
+
+    3 block: VOID VARIABLE '(' ')' '{' . statements '}'
+
+    VARIABLE  shift, and go to state 10
+    NUMBER    shift, and go to state 11
+    INT       shift, and go to state 12
+    PRINT     shift, and go to state 13
+
+    $default  reduce using rule 11 (statement)
+
+    statements  go to state 14
+    statement   go to state 15
+    expr        go to state 16
+    literal     go to state 17
+
+
+State 10
+
+    7 statement: VARIABLE . '=' expr
+    9          | VARIABLE . '(' ')'
+   17 literal: VARIABLE .
+
+    '('  shift, and go to state 18
+    '='  shift, and go to state 19
+
+    $default  reduce using rule 17 (literal)
+
+
+State 11
+
+   18 literal: NUMBER .
+
+    $default  reduce using rule 18 (literal)
+
+
+State 12
+
+    6 statement: INT . var_list
+
+    VARIABLE  shift, and go to state 20
+
+    var_list  go to state 21
+
+
+State 13
+
+    8 statement: PRINT . '(' STRING pargs ')'
+
+    '('  shift, and go to state 22
+
+
+State 14
+
+    3 block: VOID VARIABLE '(' ')' '{' statements . '}'
+
+    '}'  shift, and go to state 23
+
+
+State 15
+
+    4 statements: statement . ';' statements
+    5           | statement . ';'
+
+    ';'  shift, and go to state 24
+
+
+State 16
+
+   10 statement: expr .
+
+    $default  reduce using rule 10 (statement)
+
+
+State 17
+
+   15 expr: literal . op expr
+   16     | literal .
+
+    '+'  shift, and go to state 25
+    '-'  shift, and go to state 26
+
+    $default  reduce using rule 16 (expr)
+
+    op  go to state 27
+
+
+State 18
+
+    9 statement: VARIABLE '(' . ')'
+
+    ')'  shift, and go to state 28
+
+
+State 19
+
+    7 statement: VARIABLE '=' . expr
+
+    VARIABLE  shift, and go to state 29
+    NUMBER    shift, and go to state 11
+
+    expr     go to state 30
+    literal  go to state 17
+
+
+State 20
+
+   21 var_list: VARIABLE . ',' var_list
+   22         | VARIABLE .
+
+    ','  shift, and go to state 31
+
+    $default  reduce using rule 22 (var_list)
+
+
+State 21
+
+    6 statement: INT var_list .
+
+    $default  reduce using rule 6 (statement)
+
+
+State 22
+
+    8 statement: PRINT '(' . STRING pargs ')'
+
+    STRING  shift, and go to state 32
+
+
+State 23
+
+    3 block: VOID VARIABLE '(' ')' '{' statements '}' .
+
+    $default  reduce using rule 3 (block)
+
+
+State 24
+
+    4 statements: statement ';' . statements
+    5           | statement ';' .
+
+    VARIABLE  shift, and go to state 10
+    NUMBER    shift, and go to state 11
+    INT       shift, and go to state 12
+    PRINT     shift, and go to state 13
+
+    ';'       reduce using rule 11 (statement)
+    $default  reduce using rule 5 (statements)
+
+    statements  go to state 33
+    statement   go to state 15
+    expr        go to state 16
+    literal     go to state 17
+
+
+State 25
+
+   19 op: '+' .
+
+    $default  reduce using rule 19 (op)
+
+
+State 26
+
+   20 op: '-' .
+
+    $default  reduce using rule 20 (op)
+
+
+State 27
+
+   15 expr: literal op . expr
+
+    VARIABLE  shift, and go to state 29
+    NUMBER    shift, and go to state 11
+
+    expr     go to state 34
+    literal  go to state 17
+
+
+State 28
+
+    9 statement: VARIABLE '(' ')' .
+
+    $default  reduce using rule 9 (statement)
+
+
+State 29
+
+   17 literal: VARIABLE .
+
+    $default  reduce using rule 17 (literal)
+
+
+State 30
+
+    7 statement: VARIABLE '=' expr .
+
+    $default  reduce using rule 7 (statement)
+
+
+State 31
+
+   21 var_list: VARIABLE ',' . var_list
+
+    VARIABLE  shift, and go to state 20
+
+    var_list  go to state 35
+
+
+State 32
+
+    8 statement: PRINT '(' STRING . pargs ')'
+
+    ','  shift, and go to state 36
+
+    $default  reduce using rule 14 (pargs)
+
+    pargs  go to state 37
+
+
+State 33
+
+    4 statements: statement ';' statements .
+
+    $default  reduce using rule 4 (statements)
+
+
+State 34
+
+   15 expr: literal op expr .
+
+    $default  reduce using rule 15 (expr)
+
+
+State 35
+
+   21 var_list: VARIABLE ',' var_list .
+
+    $default  reduce using rule 21 (var_list)
+
+
+State 36
+
+   12 pargs: ',' . VARIABLE pargs
+   13      | ',' . NUMBER pargs
+
+    VARIABLE  shift, and go to state 38
+    NUMBER    shift, and go to state 39
+
+
+State 37
+
+    8 statement: PRINT '(' STRING pargs . ')'
+
+    ')'  shift, and go to state 40
+
+
+State 38
+
+   12 pargs: ',' VARIABLE . pargs
+
+    ','  shift, and go to state 36
+
+    $default  reduce using rule 14 (pargs)
+
+    pargs  go to state 41
+
+
+State 39
+
+   13 pargs: ',' NUMBER . pargs
+
+    ','  shift, and go to state 36
+
+    $default  reduce using rule 14 (pargs)
+
+    pargs  go to state 42
+
+
+State 40
+
+    8 statement: PRINT '(' STRING pargs ')' .
+
+    $default  reduce using rule 8 (statement)
+
+
+State 41
+
+   12 pargs: ',' VARIABLE pargs .
+
+    $default  reduce using rule 12 (pargs)
+
+
+State 42
+
+   13 pargs: ',' NUMBER pargs .
+
+    $default  reduce using rule 13 (pargs)

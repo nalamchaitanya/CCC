@@ -17,7 +17,8 @@
 %token <string> VARIABLE STRING
 %token <number> NUMBER
 %token INT VOID PRINT
-%type  <number> pargs var_list
+%type  <number> pargs
+%type  <number> var_list
 
 
 %%
@@ -28,28 +29,27 @@ program:
         ;
 
 block:
-        VOID VARIABLE '(' ')' '{' statements '}'
+        VOID VARIABLE '(' ')' '{' statements '}'    {printf("%s is completed.",$2);}
         ;
 
 statements:
-        statement statements
-        | statement
+        statement ';' statements
+        | statement ';'
         ;
 
 statement:
-        INT var_list ';'
-        | INT ';'
-        | VARIABLE '=' expr ';'
-        | PRINT '(' STRING pargs ')' ';'    {if($4=1){printf("hi\n");}}
-        | PRINT '(' STRING ')' ';'
-        | VARIABLE '(' ')' ';'
-        | ';'
+        INT var_list                     {printf("in varlist");}
+        | VARIABLE '=' expr
+        | PRINT '(' STRING pargs ')'     {if($4=1){printf("hi\n");}}
+        | VARIABLE '(' ')'
+        | expr
         |
         ;
 
 pargs:
-        ',' VARIABLE pargs              {$$=0;}
-        | ',' NUMBER pargs              {$$=0;}
+        ',' VARIABLE pargs              {$$=$3+1;}
+        | ',' NUMBER pargs              {$$=$3+1;}
+        |                               {$$=0;}
         ;
 
 expr:
@@ -68,8 +68,8 @@ op:
         ;
 
 var_list:
-        VARIABLE ',' var_list           {$$=0;}
-        | VARIABLE                      {$$=0;}
+        VARIABLE ',' var_list           {$$=$3+1;printf("variable\n");}
+        | VARIABLE                      {printf("in varlist %s",$1);$$=1;}
         ;
 
 %%
