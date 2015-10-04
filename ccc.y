@@ -121,8 +121,8 @@ statement:
         | PRINT '(' STRING pargs ')'    {
                                             contexts[fcount]->strlbl[contexts[fcount]->strcnt]=strcount;
                                             contexts[fcount]->strings[contexts[fcount]->strcnt]=$3;
-                                            contexts[fcount]->strcnt++;
                                             $$=printPrintf(contexts,fcount,$3,$4,strcount);
+                                            contexts[fcount]->strcnt++;
                                             strcount++;
                                         }
         | VARIABLE '(' ')'              {
@@ -166,7 +166,6 @@ pargs:
                                                 yyerror();
                                             char *temp=(char*)malloc(sizeof(char)*500);
                                             sprintf(temp,",%s%s",$2,$3);
-                                            printf("helo2\n");
                                             $$=temp;
                                         }
         | ',' NUMBER pargs              {
@@ -174,7 +173,7 @@ pargs:
                                             sprintf(temp,",%d%s",$2,$3);
                                             $$=temp;
                                         }
-        |                               {printf("helo\n");$$="\0";}
+        |                               {$$="\0";}
         ;
 
 expr:
@@ -218,7 +217,7 @@ expr:
                                             *temp='\0';
                                             strcat(temp,$3);
                                             char *tmp=(char*)malloc(sizeof(char)*30);
-                                            sprintf(tmp,"\tsubq\t%d(%%rbp), %%eax\n",-4*(varcount-i));
+                                            sprintf(tmp,"\tsubl\t%d(%%rbp), %%eax\n",-4*(varcount-i));
                                             strcat(temp,tmp);
                                             $$=temp;
                                         }
@@ -238,7 +237,7 @@ expr:
                                             char *tmp = (char*)malloc(sizeof(char)*30);
                                             sprintf(tmp,"\tmovl\t$%d, %%edx\n",$1);
                                             strcat(temp,tmp);
-                                            strcat(temp,"\tsubq\t%%eax, %%edx\n");
+                                            strcat(temp,"\tsubl\t%%eax, %%edx\n");
                                             strcat(temp,"\tmovl\t%%edx, %%eax\n");
                                             $$=temp;
                                         }
@@ -302,7 +301,7 @@ expr:
                                             *temp='\0';
                                             sprintf(tmp,"\tmovl\t%d(%%rbp), %%eax\n",-4*(varcount-i));
                                             strcat(temp,tmp);
-                                            sprintf(tmp,"\tsubq\t$%d, %%eax\n",$3);
+                                            sprintf(tmp,"\tsubl\t$%d, %%eax\n",$3);
                                             strcat(temp,tmp);
                                             $$=temp;
                                         }
@@ -322,7 +321,7 @@ expr:
                                             *temp='\0';
                                             sprintf(tmp,"\tmovl\t$%d, %%eax\n",$1);
                                             strcat(temp,tmp);
-                                            sprintf(tmp,"\tsubq\t$%d, %%eax\n",$3);
+                                            sprintf(tmp,"\tsubl\t$%d, %%eax\n",$3);
                                             strcat(temp,tmp);
                                             $$=temp;
                                         }

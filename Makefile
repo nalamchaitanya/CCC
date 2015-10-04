@@ -5,7 +5,7 @@ SH = bash
 CFLAGS = -g
 LDFLAGS = -lm
 
-a.out: lex.yy.c y.tab.o Interpreter.o
+ccc: lex.yy.c y.tab.o Interpreter.o
 	gcc -lm $^ -o $@
 
 y.tab.o: y.tab.c y.tab.h

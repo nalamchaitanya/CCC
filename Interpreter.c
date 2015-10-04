@@ -19,9 +19,9 @@ char* printHeader(Context *context)
     }
     sprintf(temp,"\t.globl\t%s\n%s:\n",context->fname,context->fname);
     strcat(str,temp);
-    strcat(str,"\tpushq\t%%rbp\n");
-    strcat(str,"\tmovq\t%%rsp, %%rbp\n");
-    strcat(str,"\tsubq\t$512, %%rsp\n");
+    strcat(str,"\tpushq\t%rbp\n");
+    strcat(str,"\tmovq\t%rsp, %rbp\n");
+    strcat(str,"\tsubq\t$512, %rsp\n");
     return str;
 }
 
@@ -74,25 +74,30 @@ char* printPrintf(Context **context,int index,char *str,char* args,int strcnt)
         {
             if(i<5)
             {
-                sprintf(tmp,"\tmovl\t%d(%%rbp), %s\n",getIndex(context,index,syms[i]),strs[i]);
+                if(syms[i][0]<='9'&&syms[i][0]>='0')
+                    sprintf(tmp,"\tmovl\t$%d, %s\n",atoi(syms[i]),strs[i]);
+                else
+                    sprintf(tmp,"\tmovl\t%d(%%rbp), %s\n",getIndex(context,index,syms[i]),strs[i]);
                 strcat(temp,tmp);
             }
             else
             {
-                sprintf(tmp,"\tmovl\t%d(%%rbp), %%eax\n",getIndex(context,index,syms[i]));
+                if(syms[i][0]<='9'&&syms[i][0]>='0')
+                    sprintf(tmp,"\tmovl\t$%d, %%eax\n",atoi(syms[i]));
+                else
+                    sprintf(tmp,"\tmovl\t%d(%%rbp), %%eax\n",getIndex(context,index,syms[i]));
                 strcat(temp,tmp);
-                sprintf(tmp,"\tmovl\t%%eax, %d(%%rsp)",8*(i-5));
+                sprintf(tmp,"\tmovl\t%%eax, %d(%%rsp)\n",8*(i-5));
                 strcat(temp,tmp);
             }
             i++;
         }
-
     }
     sprintf(tmp,"\tmovl\t$.LC%d, %%edi\n",context[index]->strlbl[context[index]->strcnt]);
     strcat(temp,tmp);
-    strcat(temp,"\tmovl\t$0, %%eax\n");
+    strcat(temp,"\tmovl\t$0, %eax\n");
     strcat(temp,"\tcall\tprintf\n");
-    context[index]->strcnt++;
+    return temp;
 }
 
 int getIndex(Context **context,int fcount,char *varname)
