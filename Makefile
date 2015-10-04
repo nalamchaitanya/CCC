@@ -5,17 +5,14 @@ SH = bash
 CFLAGS = -g
 LDFLAGS = -lm
 
-a.out: lex.yy.c y.tab.o
+a.out: lex.yy.c y.tab.o Interpreter.o
 	gcc -lm $^ -o $@
 
 y.tab.o: y.tab.c y.tab.h
 	gcc -c $(CFLAGS) $< -o $@
 
-# Table.o: Table.c Table.h LList.h
-# 	gcc -c $(CFLAGS) $< -o $@
-#
-# LList.o: LList.c LList.h
-# 	gcc -c $(CFLAGS) $< -o $@
+Interpreter.o: Interpreter.c Interpreter.h
+	gcc -c $(CFLAGS) $< -o $@
 
 y.tab.c: ccc.y
 	yacc -t -v -d ccc.y

@@ -5,6 +5,7 @@ digit   [0-9]
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include "Interpreter.h"
     #include "y.tab.h"
     extern YYSTYPE yylval;
     extern FILE *yyin;
@@ -29,9 +30,7 @@ digit   [0-9]
 ("+"|"-"|"{"|"}"|"("|")"|";"|"="|",") {return *yytext;}
 
 [\"]([^\"])*[\"]    {
-                        char *temp = strdup(yytext);
-                        temp++;
-                        yylval.string = strndup(temp,strlen(temp)-1);
+                        yylval.string = strdup(yytext);
                         return STRING;
                     }
 
